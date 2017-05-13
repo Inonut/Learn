@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Angular2 + Webpack2/Angular2 + Webpack2.iml" filepath="$PROJECT_DIR$/Angular2 + Webpack2/Angular2 + Webpack2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lamda/Lamda.iml" filepath="$PROJECT_DIR$/Lamda/Lamda.iml" />
+      <module fileurl="file://$PROJECT_DIR$/angular-webpack-master/angular-webpack-master.iml" filepath="$PROJECT_DIR$/angular-webpack-master/angular-webpack-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/j-hipster.iml" filepath="$PROJECT_DIR$/.idea/modules/j-hipster.iml" />
     </modules>
   </component>
 </project>

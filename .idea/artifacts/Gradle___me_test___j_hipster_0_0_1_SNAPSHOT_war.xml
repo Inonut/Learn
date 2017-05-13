@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Gradle : me.test : j-hipster-0.0.1-SNAPSHOT.war">
+    <output-path>$PROJECT_DIR$/JHipster/build/libs</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$/JHipster" />
+    </properties>
+    <root id="archive" name="j-hipster-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Gradle : me.test : j-hipster-0.0.1-SNAPSHOT.war (exploded)" />
+    </root>
+  </artifact>
+</component>

@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var autoprefixer = require('autoprefixer');
 var helpers = require('./helpers');
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
     },
 
     module: {
@@ -21,40 +22,66 @@ module.exports = {
                 loaders: [
                     {
                         loader: 'awesome-typescript-loader',
-                        options: {configFileName: helpers.root('src', 'tsconfig.json')}
+                        options: {
+                            inlineSourceMap: true,
+                            sourceMap: false
+                        }
                     },
                     'angular2-template-loader',
-                    'angular2-router-loader'
+                    '@angularclass/hmr-loader'
                 ]
             },
             {
-                test: /\.html$/,
-                loader: 'html-loader'
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'file-loader?name=fonts/[name].[hash].[ext]?'
             },
             {
-                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                loader: 'file-loader?name=assets/[name].[hash].[ext]'
+                test: /\.json$/,
+                loader: 'json-loader'
+            },
+            {
+                test: /\.css$/,
+                exclude: helpers.root('src', 'app'),
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'postcss-loader']})
+            },
+            {   test: /\.css$/,
+                include: helpers.root('src', 'app'),
+                loader: ['raw-loader', 'postcss-loader']
+            },
+            {
+                test: /\.(scss|sass)$/,
+                exclude: helpers.root('src', 'app'),
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'postcss-loader', 'sass-loader']})
+            },
+            {
+                test: /\.(scss|sass)$/,
+                exclude: helpers.root('src', 'style'),
+                loader: ['raw-loader', 'postcss-loader', 'sass-loader']
             },
             {
                 test: /\.less$/,
                 exclude: helpers.root('src', 'app'),
-                loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: ['css-loader', 'less-loader']})
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'postcss-loader', 'less-loader']})
             },
             {
                 test: /\.less$/,
-                include: helpers.root('src', 'app'),
-                loader: 'raw-loader!less-loader'
+                exclude: helpers.root('src', 'style'),
+                loader: ['raw-loader', 'postcss-loader', 'less-loader']
+            },
+            {
+                test: /\.html$/,
+                loader: 'raw-loader',
+                exclude: helpers.root('src', 'public')
             }
         ]
     },
 
     plugins: [
-        // Workaround for angular/angular#11580
+        // Workaround needed for angular 2 angular/angular#11580
         new webpack.ContextReplacementPlugin(
             // The (\\|\/) piece accounts for path separators in *nix and Windows
-            /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-            helpers.root('./src'), // location of your src
-            {} // a map of your routes
+            /angular(\\|\/)core(\\|\/)@angular/,
+            helpers.root('./src') // location of your src
         ),
 
         new webpack.optimize.CommonsChunkPlugin({
@@ -62,7 +89,31 @@ module.exports = {
         }),
 
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: './src/public/index.html',
+            chunksSortMode: 'dependency'
+        }),
+
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                /**
+                 * Sass
+                 * Reference: https://github.com/jtangelder/sass-loader
+                 * Transforms .scss files to .css
+                 */
+                sassLoader: {
+                    //includePaths: [path.resolve(__dirname, "node_modules/foundation-sites/scss")]
+                },
+                /**
+                 * PostCSS
+                 * Reference: https://github.com/postcss/autoprefixer-core
+                 * Add vendor prefixes to your css
+                 */
+                postcss: [
+                    autoprefixer({
+                        browsers: ['last 2 version']
+                    })
+                ]
+            }
         })
     ]
 };

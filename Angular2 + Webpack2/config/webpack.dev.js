@@ -1,26 +1,27 @@
 var webpackMerge = require('webpack-merge');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var commonConfig = require('./webpack.common.js');
 var helpers = require('./helpers');
 
 module.exports = webpackMerge(commonConfig, {
-  devtool: 'cheap-module-source-map',
+    devtool: 'cheap-module-eval-source-map',
 
-  output: {
-    path: helpers.root('dist'),
-    publicPath: 'http://localhost:9090/',
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
-  },
+    output: {
+        path: helpers.root('dist'),
+        publicPath: 'http://localhost:8080/',
+        filename: '[name].js',
+        chunkFilename: '[id].chunk.js'
+    },
 
-  plugins: [
-    new ExtractTextPlugin('[name].css')
-  ],
+    plugins: [
+        new ExtractTextPlugin('css/[name].[hash].css')
+    ],
 
-  devServer: {
-    historyApiFallback: true,
-    // stats: 'minimal',
-    inline: true,
-    port: 9090
-  }
+    devServer: {
+        contentBase: './src/public',
+        historyApiFallback: true,
+        quiet: true,
+        stats: 'minimal'
+    }
 });
